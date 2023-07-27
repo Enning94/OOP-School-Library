@@ -1,16 +1,13 @@
-
 class Classroom
-    attr_accessor :label
-    attr_accessor :student
-    
-    def initialize( label)
-        @label = label
-        @students = []
-    end
+  attr_accessor :label, :student
 
-    def add_student(student)
-        @students<<student
-        student.classroom = self
-    end 
+  def initialize(label)
+    @label = label
+    @students = []
+  end
 
+  def add_student(student)
+    @students << student
+    student.classroom = self
+  end
 end
