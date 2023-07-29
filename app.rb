@@ -4,41 +4,36 @@ require_relative 'rental'
 require_relative 'student'
 require_relative 'teacher'
 
-
-
 class App
-def initialize
+  def initialize
     @books = []
     @people = []
     @rentals = []
-end
+  end
 
-def list_all_books
+  def list_all_books
     puts 'LIST OF ALL AVAILABLE BOOKS:'
     if @books.empty?
-        puts 'No books available' 
+      puts 'No books available'
     else
-        @books.each do |book|
-            puts "Title: #{book.title}, Author: #{book.author}"
-           
-        end
+      @books.each do |book|
+        puts "Title: #{book.title}, Author: #{book.author}"
+      end
     end
-end
+  end
 
-def list_all_people
+  def list_all_people
     puts 'LIST OF PEOPLE:'
     if @people.empty?
-        puts 'No person available' 
+      puts 'No person available'
     else
-        @people.each do |person|
-        
-             puts " [#{person.class}] Name:#{person.name}, Age:#{person.age}, ID:#{person.id}"
-        end
+      @people.each do |person|
+        puts " [#{person.class}] Name:#{person.name}, Age:#{person.age}, ID:#{person.id}"
+      end
     end
-end
+  end
 
-
-def create_person
+  def create_person
     print 'Do you want to create a Student (1) or a Teacher (2)? [Input the number]:'
     choice = gets.chomp.to_i
 
@@ -49,36 +44,31 @@ def create_person
     else
       puts 'Invalid choice. Please choose 1 for Student or 2 for Teacher.'
     end
+  end
 
-end
-
-def create_student
-
+  def create_student
     print 'Name: '
     name = gets.chomp
-    
+
     print 'Age: '
     age = gets.chomp.to_i
 
     print 'Has parent permission [Y/N]: '
     parent_permission = gets.chomp
-  
-
 
     if parent_permission.downcase == 'n'
-        student = Student.new('classroom', name, age, true)
+      student = Student.new('classroom', name, true, age)
     elsif parent_permission.downcase == 'y'
-        student = Student.new('classroom', name, age, false)
+      student = Student.new('classroom', name, false, age)
     else
-        puts 'Invalid Selection'
-        return
+      puts 'Invalid Selection'
+      return
     end
     @people << student
     puts 'Student Created Successfully'
-end
+  end
 
-def create_teacher
-
+  def create_teacher
     print 'Name: '
     name = gets.chomp
 
@@ -87,12 +77,12 @@ def create_teacher
 
     print 'Specialization: '
     specialization = gets.chomp
-    teacher = Teacher.new(specialization, name, age, true)
-   @people << teacher
-   puts 'Teacher Created Successfully'
-end
+    teacher = Teacher.new(specialization, name, true, age)
+    @people << teacher
+    puts 'Teacher Created Successfully'
+  end
 
-def create_book
+  def create_book
     print 'Title: '
     title = gets.chomp
 
@@ -102,25 +92,27 @@ def create_book
     book = Book.new(title, author)
     @books << book
     puts 'Book Created Successfully'
-end
+  end
 
-def create_rental
+  def create_rental
     puts 'Select a book from the following lists'
     @books.each_with_index { |book, index| puts "#{index}) Title: #{book.title}, Author: #{book.author}" }
     book_index = gets.chomp.to_i
-  
+
     puts 'Select a person from the following list by number (not id)'
-    @people.each_with_index { |person, index| puts "#{index}) Name: #{person.name}, AGE: #{person.age}, ID: #{person.id}" }
-    person_index = gets.chomp.to_i  
-  
+    @people.each_with_index do |person, index|
+      puts "#{index}) Name: #{person.name}, AGE: #{person.age}, ID: #{person.id}"
+    end
+    person_index = gets.chomp.to_i
+
     print 'Date: '
     date_of_rental = gets.chomp
-  
-    rental = Rental.new( date_of_rental, @books[book_index], @people[person_index])
+
+    rental = Rental.new(date_of_rental, @books[book_index], @people[person_index])
     @rentals << rental
     puts 'Rental created successfully'
   end
-  
+
   def list_rentals
     print "\nID of the person: "
     person_id = gets.chomp.to_i
