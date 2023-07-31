@@ -55,7 +55,7 @@ class App
     age = Inputs.user_input_to_i
 
     print 'Has parent permission [Y/N]: '
-    parent_permission = Inputs.user_permission
+    parent_permission = Inputs.user_input
 
     if parent_permission.downcase == 'n'
       student = Student.new('classroom', name, true, age)
