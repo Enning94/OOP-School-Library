@@ -102,6 +102,12 @@ Clone this repository to your desired folder:
 - Twitter: [@nana_akyerefi](https://twitter.com/nana_akyerefi)
 - LinkedIn: [Enning Festus](https://www.linkedin.com/in/enningfestus/)
 
+
+👤  **Foga Kater Amos**
+
+- GitHub: [@githubhandle](https://github.com/katfogy)
+- Twitter: [@twitterhandle](https://twitter.com/twitterhandle)
+- LinkedIn: [LinkedIn](https://www.linkedin.com/in/foga-amos-2b5371103/)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- FUTURE FEATURES -->
