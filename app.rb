@@ -3,6 +3,7 @@ require_relative 'person'
 require_relative 'rental'
 require_relative 'student'
 require_relative 'teacher'
+require_relative 'inputs'
 
 class App
   def initialize
@@ -35,7 +36,7 @@ class App
 
   def create_person
     print 'Do you want to create a Student (1) or a Teacher (2)? [Input the number]:'
-    choice = gets.chomp.to_i
+    choice = Inputs.user_input_to_i
 
     if choice == 1
       create_student
@@ -48,13 +49,13 @@ class App
 
   def create_student
     print 'Name: '
-    name = gets.chomp
+    name = Inputs.user_input
 
     print 'Age: '
-    age = gets.chomp.to_i
+    age = Inputs.user_input_to_i
 
     print 'Has parent permission [Y/N]: '
-    parent_permission = gets.chomp
+    parent_permission = Inputs.user_input
 
     if parent_permission.downcase == 'n'
       student = Student.new('classroom', name, true, age)
@@ -70,13 +71,13 @@ class App
 
   def create_teacher
     print 'Name: '
-    name = gets.chomp
+    name = Inputs.user_input
 
     print 'Age: '
-    age = gets.chomp.to_i
+    age = Inputs.user_input_to_i
 
     print 'Specialization: '
-    specialization = gets.chomp
+    specialization = Inputs.user_input
     teacher = Teacher.new(specialization, name, true, age)
     @people << teacher
     puts 'Teacher Created Successfully'
@@ -84,10 +85,10 @@ class App
 
   def create_book
     print 'Title: '
-    title = gets.chomp
+    title = Inputs.user_input
 
     print 'Author: '
-    author = gets.chomp
+    author = Inputs.user_input
 
     book = Book.new(title, author)
     @books << book
@@ -97,16 +98,16 @@ class App
   def create_rental
     puts 'Select a book from the following lists'
     @books.each_with_index { |book, index| puts "#{index}) Title: #{book.title}, Author: #{book.author}" }
-    book_index = gets.chomp.to_i
+    book_index = Inputs.user_input_to_i
 
     puts 'Select a person from the following list by number (not id)'
     @people.each_with_index do |person, index|
       puts "#{index}) Name: #{person.name}, AGE: #{person.age}, ID: #{person.id}"
     end
-    person_index = gets.chomp.to_i
+    person_index = Inputs.user_input_to_i
 
     print 'Date: '
-    date_of_rental = gets.chomp
+    date_of_rental = Inputs.user_input
 
     rental = Rental.new(date_of_rental, @books[book_index], @people[person_index])
     @rentals << rental
@@ -115,7 +116,7 @@ class App
 
   def list_rentals
     print "\nID of the person: "
-    person_id = gets.chomp.to_i
+    person_id = Inputs.user_input_to_i
 
     found_rentals = @rentals.select { |rental| rental.person.id == person_id }
 
@@ -128,46 +129,95 @@ class App
       end
     end
   end
+end
 
-  def menu
-    puts "\nPlease choose an option by entering a number:"
-    puts '1 - List all books'
-    puts '2 - List all people'
-    puts '3 - Create a person'
-    puts '4 - Create a book'
-    puts '5 - Create a rental'
-    puts '6 - List all rentals for a given person id'
-    puts '7 - exit'
-
-    puts 'Waiting for your option'
+class OptionHandler
+  def initialize(app)
+    @app = app
   end
 
-  def display
-    options = {
-      1 => method(:list_all_books),
-      2 => method(:list_all_people),
-      3 => method(:create_person),
-      4 => method(:create_book),
-      5 => method(:create_rental),
-      6 => method(:list_rentals),
-      7 => method(:exit_app)
+  def handle_option(option)
+    actions = {
+      1 => AddBookAction.new(@app),
+      2 => ListBooksAction.new(@app),
+      3 => AddPersonAction.new(@app),
+      4 => ListPeopleAction.new(@app),
+      5 => AddRentalAction.new(@app),
+      6 => ListRentalsAction.new(@app),
+      7 => ExitAction.new
     }
 
-    loop do
-      menu
-      user_option = gets.chomp.to_i
-
-      if options.key?(user_option)
-        options[user_option].call
-      else
-        puts 'Invalid Selection'
-      end
-
-      break if user_option == 7
+    action = actions[option]
+    if action
+      action.execute
+    else
+      puts 'Invalid selection'
     end
   end
+end
 
-  def exit_app
-    puts 'Thank you for using this app!'
+class AddBookAction
+  def initialize(app)
+    @app = app
+  end
+
+  def execute
+    @app.create_book
+  end
+end
+
+class ListBooksAction
+  def initialize(app)
+    @app = app
+  end
+
+  def execute
+    @app.list_all_books
+  end
+end
+
+class AddPersonAction
+  def initialize(app)
+    @app = app
+  end
+
+  def execute
+    @app.create_person
+  end
+end
+
+class ListPeopleAction
+  def initialize(app)
+    @app = app
+  end
+
+  def execute
+    @app.list_all_people
+  end
+end
+
+class AddRentalAction
+  def initialize(app)
+    @app = app
+  end
+
+  def execute
+    @app.create_rental
+  end
+end
+
+class ListRentalsAction
+  def initialize(app)
+    @app = app
+  end
+
+  def execute
+    @app.list_rentals
+  end
+end
+
+class ExitAction
+  def execute
+    exit
   end
 end
